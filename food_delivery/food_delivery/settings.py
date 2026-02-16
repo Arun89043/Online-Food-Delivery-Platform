@@ -34,11 +34,11 @@ SECRET_KEY = "django-insecure-=kmnmq)pj@t!#k=y&-@@l#-98izye%qxk+()#3b=v9bm1hi(b#
 # SECURITY WARNING: don't run with debug turned on in production!
 import os
 
-DEBUG = False
+DEBUG = True
 
 
 ALLOWED_HOSTS = [
-    "online-food-delivery-platform-2.onrender.com",
+
 ]
 
 # Application definition
