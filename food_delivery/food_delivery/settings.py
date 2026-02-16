@@ -32,12 +32,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-=kmnmq)pj@t!#k=y&-@@l#-98izye%qxk+()#3b=v9bm1hi(b#"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+import os
+
+DEBUG = False
+
 
 ALLOWED_HOSTS = [
-     "online-food-delivery-platform-2.onrender.com",
+    "online-food-delivery-platform-2.onrender.com",
 ]
-
 
 # Application definition
 
