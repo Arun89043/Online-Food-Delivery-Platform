@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { CartContext } from "../services/CartContext";
 import { useNavigate } from "react-router-dom";
+import { authFetch } from "../services/authFetch";
 
 function Cart() {
   const { cart, setCart } = useContext(CartContext);
@@ -15,32 +16,28 @@ function Cart() {
     setCart(updatedCart);
   };
 
-  // Place Order
+  // Place Order (Uses authFetch ✅)
   const placeOrder = async () => {
-    const token = localStorage.getItem("access");
-
-    if (!token) {
-      alert("Please login first.");
-      navigate("/login");
-      return;
-    }
+    if (cart.length === 0) return;
 
     setLoading(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/orders/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          items: cart.map((item) => ({
-            menu_item_id: item.id,
-            quantity: 1
-          }))
-        })
-      });
+      const response = await authFetch(
+        "http://127.0.0.1:8000/api/orders/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            items: cart.map((item) => ({
+              menu_item_id: item.id,
+              quantity: 1,
+            })),
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -53,6 +50,7 @@ function Cart() {
       }
     } catch (error) {
       alert("Server Error");
+      console.log(error);
     }
 
     setLoading(false);
@@ -82,22 +80,10 @@ function Cart() {
                 borderRadius: "16px",
                 backgroundColor: "#fff",
                 boxShadow: "0 6px 20px rgba(0,0,0,0.08)",
-                transition: "all 0.3s ease"
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-6px)";
-                e.currentTarget.style.boxShadow =
-                  "0 14px 30px rgba(0,0,0,0.15)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow =
-                  "0 6px 20px rgba(0,0,0,0.08)";
+                transition: "all 0.3s ease",
               }}
             >
-              {/* LEFT SIDE */}
               <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-                
                 {item.image && (
                   <img
                     src={item.image}
@@ -107,20 +93,16 @@ function Cart() {
                       height: "90px",
                       objectFit: "cover",
                       borderRadius: "12px",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
                     }}
                   />
                 )}
 
                 <div>
                   <h3 style={{ marginBottom: "6px" }}>{item.name}</h3>
-                  <p style={{ fontWeight: "bold", fontSize: "16px" }}>
-                    ₹ {item.price}
-                  </p>
+                  <p style={{ fontWeight: "bold" }}>₹ {item.price}</p>
                 </div>
               </div>
 
-              {/* RIGHT SIDE */}
               <button
                 onClick={() => removeItem(index)}
                 style={{
@@ -131,28 +113,21 @@ function Cart() {
                   borderRadius: "8px",
                   cursor: "pointer",
                   fontWeight: "bold",
-                  transition: "0.2s ease"
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#e60000")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#ff4d4d")
-                }
               >
                 Remove ✖
               </button>
             </div>
           ))}
 
-          {/* TOTAL SECTION */}
+          {/* Total Section */}
           <div
             style={{
               marginTop: "40px",
               padding: "25px",
               borderRadius: "16px",
               backgroundColor: "#fff7f3",
-              boxShadow: "0 6px 20px rgba(0,0,0,0.08)"
+              boxShadow: "0 6px 20px rgba(0,0,0,0.08)",
             }}
           >
             <h3 style={{ marginBottom: "20px" }}>Total: ₹ {total}</h3>
@@ -170,8 +145,7 @@ function Cart() {
                 cursor: "pointer",
                 fontSize: "17px",
                 fontWeight: "bold",
-                transition: "0.3s ease",
-                opacity: loading ? 0.7 : 1
+                opacity: loading ? 0.7 : 1,
               }}
             >
               {loading ? "Placing Order..." : "Place Order 🚀"}
