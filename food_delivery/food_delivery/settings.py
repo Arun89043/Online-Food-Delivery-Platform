@@ -10,7 +10,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+
 from datetime import timedelta
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+}
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -34,11 +43,11 @@ SECRET_KEY = "django-insecure-=kmnmq)pj@t!#k=y&-@@l#-98izye%qxk+()#3b=v9bm1hi(b#
 # SECURITY WARNING: don't run with debug turned on in production!
 import os
 
-DEBUG = False
+DEBUG = True
 
 
 ALLOWED_HOSTS = [
-    "online-food-delivery-platform-2.onrender.com",
+    
 ]
 
 # Application definition
