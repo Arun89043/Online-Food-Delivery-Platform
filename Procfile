@@ -1,2 +1,2 @@
-web: gunicorn food_delivery.wsgi
-release: python food_delivery/manage.py migrate
+web: gunicorn food_delivery.wsgi --chdir food_delivery
+release: cd food_delivery && python manage.py migrate
